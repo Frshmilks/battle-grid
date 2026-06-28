@@ -1,0 +1,373 @@
+/* ── CSS Variables (default = galaxy) ── */
+:root {
+  --radius: 1rem;
+  --background: oklch(0.13 0.04 270);
+  --foreground: oklch(0.98 0.01 250);
+  --card: oklch(0.22 0.08 280 / 0.55);
+  --card-foreground: oklch(0.98 0.01 250);
+  --primary: oklch(0.62 0.22 290);
+  --primary-foreground: oklch(0.12 0.04 270);
+  --secondary: oklch(0.28 0.08 280);
+  --muted-foreground: oklch(0.78 0.03 270);
+  --border: oklch(0.98 0.01 270 / 0.12);
+  --player-x: oklch(0.82 0.16 60);
+  --player-o: oklch(0.72 0.20 290);
+  --gradient-bg:
+    radial-gradient(ellipse at 15% 12%, oklch(0.40 0.22 290 / 0.55), transparent 55%),
+    radial-gradient(ellipse at 85% 88%, oklch(0.40 0.18 260 / 0.55), transparent 55%),
+    radial-gradient(ellipse at 50% 50%, oklch(0.25 0.10 280 / 0.4), transparent 70%),
+    linear-gradient(160deg, oklch(0.08 0.03 270), oklch(0.04 0.02 260));
+  --gradient-primary: linear-gradient(135deg, oklch(0.62 0.22 290), oklch(0.78 0.20 320));
+  --shadow-glow: 0 0 50px oklch(0.62 0.22 290 / 0.45);
+  --shadow-elegant: 0 20px 60px -20px oklch(0.05 0.02 260 / 0.7);
+  --star-opacity: 0.6;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border-color: var(--border); }
+
+html, body {
+  min-height: 100vh;
+  background: var(--gradient-bg);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  transition: background 0.6s ease, color 0.4s ease;
+}
+
+/* Starfield (visible on dark themes only) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, white, transparent 60%),
+    radial-gradient(1px 1px at 78% 32%, white, transparent 60%),
+    radial-gradient(1.5px 1.5px at 35% 65%, white, transparent 60%),
+    radial-gradient(1px 1px at 60% 80%, white, transparent 60%),
+    radial-gradient(1px 1px at 90% 70%, white, transparent 60%),
+    radial-gradient(1.5px 1.5px at 22% 88%, white, transparent 60%),
+    radial-gradient(1px 1px at 48% 25%, white, transparent 60%),
+    radial-gradient(1px 1px at 5% 50%, white, transparent 60%),
+    radial-gradient(1.5px 1.5px at 70% 12%, white, transparent 60%),
+    radial-gradient(1px 1px at 95% 45%, white, transparent 60%);
+  opacity: var(--star-opacity);
+  animation: twinkle 6s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes twinkle { from { opacity: calc(var(--star-opacity) * 0.55); } to { opacity: var(--star-opacity); } }
+
+@keyframes pop-in {
+  0%   { transform: scale(0.4) rotate(-20deg); opacity: 0; }
+  60%  { transform: scale(1.18) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); }
+}
+@keyframes float-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse-glow { 0%, 100% { box-shadow: var(--shadow-glow); } 50% { box-shadow: 0 0 65px var(--primary); } }
+@keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes orbit-spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+/* ── Utilities ── */
+.title-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 24px var(--primary));
+}
+.glass-card {
+  background: var(--card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-elegant);
+  position: relative;
+  z-index: 1;
+  transition: background 0.5s ease, border-color 0.5s ease;
+}
+.animate-pop        { animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.animate-float-in   { animation: float-in 0.5s ease forwards; }
+.animate-pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
+.animate-float-y    { animation: float-y 4s ease-in-out infinite; }
+
+/* ── Buttons ── */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  font-weight: 600;
+  padding: 0.85rem 1.75rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.25s, filter 0.2s, background 0.4s;
+  box-shadow: var(--shadow-glow);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+}
+.btn-primary:hover  { transform: translateY(-2px); filter: brightness(1.12); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  background: var(--card);
+  color: var(--foreground);
+  font-weight: 500;
+  padding: 0.65rem 1.15rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.875rem;
+}
+.btn-ghost:hover { border-color: var(--primary); box-shadow: 0 0 18px var(--primary); }
+
+.btn-mode-active {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 1px var(--primary), 0 0 24px var(--primary);
+}
+.btn-diff-easy   { border-color: oklch(0.78 0.18 150) !important; box-shadow: 0 0 0 1px oklch(0.78 0.18 150), 0 0 18px oklch(0.78 0.18 150 / 0.45); }
+.btn-diff-medium { border-color: oklch(0.82 0.18 75) !important;  box-shadow: 0 0 0 1px oklch(0.82 0.18 75),  0 0 18px oklch(0.82 0.18 75 / 0.45); }
+.btn-diff-hard   { border-color: oklch(0.70 0.22 20) !important;  box-shadow: 0 0 0 1px oklch(0.70 0.22 20),  0 0 18px oklch(0.70 0.22 20 / 0.5); }
+
+/* ── Board Cells ── */
+.cell-base {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.25s, background 0.25s;
+  user-select: none;
+}
+.cell-base:hover { transform: translateY(-3px); box-shadow: 0 10px 30px -10px var(--primary), inset 0 0 20px var(--primary); }
+.cell-x { color: var(--player-x); text-shadow: 0 0 18px var(--player-x); }
+.cell-o { color: var(--player-o); text-shadow: 0 0 18px var(--player-o); }
+
+/* ── Layout ── */
+#app { min-height: 100vh; position: relative; z-index: 1; }
+
+#splash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1.5rem;
+  text-align: center;
+  overflow: hidden;
+}
+.orbit-ring { pointer-events: none; position: absolute; inset: 0; }
+.splash-content { position: relative; z-index: 10; }
+.splash-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.5rem, 10vw, 6rem);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.splash-sub { color: var(--muted-foreground); font-size: clamp(0.9rem, 2.5vw, 1.125rem); margin-bottom: 0.5rem; }
+.splash-vs  { font-size: 0.875rem; margin-bottom: 2.5rem; color: var(--muted-foreground); }
+
+#game {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem 1rem 2.5rem;
+}
+.game-card { width: 100%; max-width: 560px; border-radius: 1.75rem; padding: 1.25rem; }
+@media (min-width: 480px) { .game-card { padding: 2rem; } }
+.game-header { text-align: center; margin-bottom: 1.5rem; }
+.game-title  { font-family: 'Orbitron', sans-serif; font-size: clamp(1.5rem, 6vw, 2.75rem); font-weight: 900; line-height: 1; }
+
+/* Theme picker */
+#theme-screen {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 30px;
+}
+.theme-card { width: 100%; max-width: 700px; border-radius: 30px; padding: 40px; text-align: center; }
+.theme-card h2 { font-family: 'Orbitron', sans-serif; font-size: 2rem; margin-bottom: 10px; }
+.theme-sub { color: var(--muted-foreground); margin-bottom: 30px; }
+.theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 18px; }
+.theme-btn {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px 12px;
+  background: var(--card);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: 0.3s;
+  backdrop-filter: blur(10px);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.theme-btn:hover { transform: translateY(-6px); box-shadow: 0 0 30px var(--primary); border-color: var(--primary); }
+.theme-btn .emoji { font-size: 42px; }
+.theme-back-row { margin-top: 28px; }
+
+/* Scoreboard */
+.scoreboard  { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+.score-card  { border-radius: 1rem; padding: 0.75rem 0.5rem; text-align: center; }
+.score-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.score-value { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; }
+.score-x     { color: var(--player-x); }
+.score-draw  { color: var(--muted-foreground); }
+.score-o     { color: var(--player-o); }
+
+.mode-row { display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+#difficulty-section { margin-bottom: 1.25rem; }
+.diff-label { text-align: center; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--muted-foreground); margin-bottom: 0.5rem; }
+.diff-row   { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+
+.status-wrap { text-align: center; margin-bottom: 1.25rem; }
+.status-pill { display: inline-block; border-radius: 9999px; padding: 0.5rem 1.25rem; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; }
+
+#board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; transition: opacity 0.3s; }
+#board.disabled { opacity: 0.4; pointer-events: none; }
+
+.actions { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+
+#popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  background: oklch(0 0 0 / 0.70);
+  backdrop-filter: blur(6px);
+  padding: 1rem;
+}
+#popup-overlay.visible { display: flex; }
+.popup-card    { border-radius: 1.75rem; padding: 2rem; max-width: 22rem; width: 100%; text-align: center; }
+.popup-icon    { font-size: 3rem; margin-bottom: 0.75rem; }
+.popup-title   { font-family: 'Orbitron', sans-serif; font-size: clamp(1.25rem, 5vw, 1.75rem); font-weight: 900; margin-bottom: 1.5rem; }
+.popup-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+
+/* ===========================
+   THEMES — fully retoken UI
+=========================== */
+
+/* Galaxy (default — purple/indigo cosmic) */
+body.theme-galaxy {
+  --player-x: oklch(0.82 0.16 60);
+  --player-o: oklch(0.72 0.20 290);
+  --primary: oklch(0.62 0.22 290);
+  --card: oklch(0.22 0.08 280 / 0.55);
+  --border: oklch(0.98 0.01 270 / 0.12);
+  --foreground: oklch(0.98 0.01 250);
+  --muted-foreground: oklch(0.78 0.03 270);
+  --gradient-bg:
+    radial-gradient(ellipse at 15% 12%, oklch(0.40 0.22 290 / 0.55), transparent 55%),
+    radial-gradient(ellipse at 85% 88%, oklch(0.40 0.18 260 / 0.55), transparent 55%),
+    linear-gradient(160deg, oklch(0.08 0.03 270), oklch(0.04 0.02 260));
+  --gradient-primary: linear-gradient(135deg, oklch(0.62 0.22 290), oklch(0.78 0.20 320));
+  --shadow-glow: 0 0 50px oklch(0.62 0.22 290 / 0.45);
+  --star-opacity: 0.7;
+}
+
+/* Knight — medieval gold & deep stone */
+body.theme-knight {
+  --player-x: oklch(0.85 0.16 85);
+  --player-o: oklch(0.62 0.20 30);
+  --primary: oklch(0.78 0.17 75);
+  --card: oklch(0.20 0.04 60 / 0.6);
+  --border: oklch(0.85 0.12 80 / 0.25);
+  --foreground: oklch(0.96 0.04 85);
+  --muted-foreground: oklch(0.75 0.06 75);
+  --gradient-bg:
+    radial-gradient(ellipse at 20% 10%, oklch(0.35 0.10 60 / 0.6), transparent 55%),
+    radial-gradient(ellipse at 80% 90%, oklch(0.30 0.08 40 / 0.6), transparent 55%),
+    linear-gradient(160deg, oklch(0.12 0.03 50), oklch(0.06 0.02 40));
+  --gradient-primary: linear-gradient(135deg, oklch(0.78 0.17 75), oklch(0.60 0.16 45));
+  --shadow-glow: 0 0 50px oklch(0.78 0.17 75 / 0.45);
+  --star-opacity: 0.15;
+}
+
+/* Sakura — soft pink garden */
+body.theme-sakura {
+  --player-x: oklch(0.72 0.18 0);
+  --player-o: oklch(0.78 0.14 30);
+  --primary: oklch(0.78 0.16 350);
+  --card: oklch(0.98 0.02 350 / 0.55);
+  --border: oklch(0.55 0.12 350 / 0.25);
+  --foreground: oklch(0.25 0.06 350);
+  --muted-foreground: oklch(0.45 0.08 350);
+  --gradient-bg:
+    radial-gradient(ellipse at 20% 15%, oklch(0.88 0.10 350 / 0.85), transparent 55%),
+    radial-gradient(ellipse at 80% 85%, oklch(0.85 0.10 25 / 0.75), transparent 55%),
+    linear-gradient(160deg, oklch(0.96 0.04 350), oklch(0.92 0.05 25));
+  --gradient-primary: linear-gradient(135deg, oklch(0.78 0.16 350), oklch(0.82 0.14 20));
+  --shadow-glow: 0 0 50px oklch(0.78 0.16 350 / 0.5);
+  --star-opacity: 0;
+}
+
+/* Element — fire vs water */
+body.theme-element {
+  --player-x: oklch(0.72 0.22 30);
+  --player-o: oklch(0.72 0.18 230);
+  --primary: oklch(0.70 0.22 30);
+  --card: oklch(0.20 0.06 240 / 0.55);
+  --border: oklch(0.70 0.18 30 / 0.25);
+  --foreground: oklch(0.98 0.02 60);
+  --muted-foreground: oklch(0.80 0.05 220);
+  --gradient-bg:
+    radial-gradient(ellipse at 10% 90%, oklch(0.45 0.22 30 / 0.65), transparent 55%),
+    radial-gradient(ellipse at 90% 10%, oklch(0.45 0.18 230 / 0.65), transparent 55%),
+    linear-gradient(160deg, oklch(0.10 0.04 250), oklch(0.08 0.05 30));
+  --gradient-primary: linear-gradient(135deg, oklch(0.72 0.22 30), oklch(0.70 0.20 230));
+  --shadow-glow: 0 0 50px oklch(0.72 0.22 30 / 0.5);
+  --star-opacity: 0.2;
+}
+
+/* Fruit — juicy cherry & watermelon */
+body.theme-fruit {
+  --player-x: oklch(0.62 0.22 15);
+  --player-o: oklch(0.72 0.20 150);
+  --primary: oklch(0.70 0.22 20);
+  --card: oklch(0.98 0.03 100 / 0.60);
+  --border: oklch(0.55 0.18 20 / 0.30);
+  --foreground: oklch(0.25 0.08 20);
+  --muted-foreground: oklch(0.45 0.10 30);
+  --gradient-bg:
+    radial-gradient(ellipse at 15% 20%, oklch(0.88 0.14 30 / 0.85), transparent 55%),
+    radial-gradient(ellipse at 85% 80%, oklch(0.88 0.16 150 / 0.75), transparent 55%),
+    linear-gradient(160deg, oklch(0.95 0.06 60), oklch(0.92 0.08 130));
+  --gradient-primary: linear-gradient(135deg, oklch(0.70 0.22 20), oklch(0.75 0.20 150));
+  --shadow-glow: 0 0 50px oklch(0.70 0.22 20 / 0.45);
+  --star-opacity: 0;
+}
+
+/* Animal — forest emerald */
+body.theme-animal {
+  --player-x: oklch(0.75 0.16 80);
+  --player-o: oklch(0.72 0.18 150);
+  --primary: oklch(0.62 0.18 150);
+  --card: oklch(0.22 0.06 160 / 0.55);
+  --border: oklch(0.75 0.15 140 / 0.25);
+  --foreground: oklch(0.96 0.04 130);
+  --muted-foreground: oklch(0.78 0.06 140);
+  --gradient-bg:
+    radial-gradient(ellipse at 15% 15%, oklch(0.40 0.15 150 / 0.65), transparent 55%),
+    radial-gradient(ellipse at 85% 85%, oklch(0.35 0.12 100 / 0.65), transparent 55%),
+    linear-gradient(160deg, oklch(0.10 0.04 150), oklch(0.06 0.03 130));
+  --gradient-primary: linear-gradient(135deg, oklch(0.62 0.18 150), oklch(0.75 0.16 100));
+  --shadow-glow: 0 0 50px oklch(0.62 0.18 150 / 0.45);
+  --star-opacity: 0.25;
+}

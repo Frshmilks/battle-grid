@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Battle Grid</title>
+  <meta name="description" content="Game papan berbasis web dengan berbagai pilihan tema, mode permainan, dan tingkat kesulitan bot." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-galaxy">
+<div id="app">
+
+  <!-- SPLASH -->
+  <main id="splash">
+    <div class="orbit-ring"></div>
+    <div class="splash-content animate-float-in">
+      <h1 class="splash-title title-gradient">BATTLE GRID</h1>
+      <p class="splash-sub">Mainkan game papan klasik dengan berbagai tema menarik.</p>
+      <p class="splash-vs">Pilih tema favoritmu, lalu tantang teman atau lawan bot.</p>
+      <button class="btn-primary animate-pulse-glow" onclick="startGame()">▶ START GAME</button>
+    </div>
+  </main>
+
+  <!-- THEME SELECTION -->
+  <main id="theme-screen" style="display:none;">
+    <div class="theme-card glass-card">
+      <h2 class="title-gradient">Pilih Tema</h2>
+      <p class="theme-sub">Tema akan langsung mengubah tampilan UI.</p>
+
+      <div class="theme-grid">
+        <button class="theme-btn" onclick="selectTheme('galaxy')">
+          <span class="emoji">🚀</span><span>Galaxy</span>
+        </button>
+        <button class="theme-btn" onclick="selectTheme('knight')">
+          <span class="emoji">🏰</span><span>Knight</span>
+        </button>
+        <button class="theme-btn" onclick="selectTheme('sakura')">
+          <span class="emoji">🌸</span><span>Sakura</span>
+        </button>
+        <button class="theme-btn" onclick="selectTheme('element')">
+          <span class="emoji">🔥</span><span>Element</span>
+        </button>
+        <button class="theme-btn" onclick="selectTheme('fruit')">
+          <span class="emoji">🍒</span><span>Fruit</span>
+        </button>
+        <button class="theme-btn" onclick="selectTheme('animal')">
+          <span class="emoji">🦉</span><span>Animal</span>
+        </button>
+      </div>
+
+      <div class="theme-back-row" id="theme-back-row" style="display:none;">
+        <button class="btn-ghost" onclick="closeThemePicker()">← Kembali ke Permainan</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- GAME -->
+  <main id="game">
+    <div class="game-card glass-card animate-float-in">
+
+      <header class="game-header">
+        <h1 class="game-title title-gradient">TIC TAC TOE</h1>
+      </header>
+
+      <div class="scoreboard">
+        <div class="score-card glass-card">
+          <div class="score-label" id="label-x">Roket 🚀</div>
+          <div class="score-value score-x" id="score-x">0</div>
+        </div>
+        <div class="score-card glass-card">
+          <div class="score-label">Seri</div>
+          <div class="score-value score-draw" id="score-draw">0</div>
+        </div>
+        <div class="score-card glass-card">
+          <div class="score-label" id="label-o">Planet 🪐</div>
+          <div class="score-value score-o" id="score-o">0</div>
+        </div>
+      </div>
+
+      <div class="mode-row">
+        <button class="btn-ghost" id="btn-player" onclick="setMode('player')">👥 1 VS 1</button>
+        <button class="btn-ghost" id="btn-bot"    onclick="setMode('bot')">🤖 VS BOT</button>
+        <button class="btn-ghost" id="btn-theme"  onclick="openThemePicker()">🎨 Ganti Tema</button>
+      </div>
+
+      <div id="difficulty-section" style="display:none;">
+        <p class="diff-label">Tingkat Kesulitan Bot</p>
+        <div class="diff-row">
+          <button class="btn-ghost" id="diff-easy"   onclick="setDifficulty('easy')">🌱 Easy</button>
+          <button class="btn-ghost" id="diff-medium" onclick="setDifficulty('medium')">⚡ Medium</button>
+          <button class="btn-ghost" id="diff-hard"   onclick="setDifficulty('hard')">🔥 Hard</button>
+        </div>
+      </div>
+
+      <div class="status-wrap">
+        <div class="status-pill glass-card" id="status">Pilih Mode Permainan</div>
+      </div>
+
+      <div id="board" class="disabled">
+        <button class="cell-base" onclick="handleClick(0)"></button>
+        <button class="cell-base" onclick="handleClick(1)"></button>
+        <button class="cell-base" onclick="handleClick(2)"></button>
+        <button class="cell-base" onclick="handleClick(3)"></button>
+        <button class="cell-base" onclick="handleClick(4)"></button>
+        <button class="cell-base" onclick="handleClick(5)"></button>
+        <button class="cell-base" onclick="handleClick(6)"></button>
+        <button class="cell-base" onclick="handleClick(7)"></button>
+        <button class="cell-base" onclick="handleClick(8)"></button>
+      </div>
+
+      <div class="actions">
+        <button class="btn-ghost" onclick="resetBoard()">🔄 Reset Papan</button>
+        <button class="btn-ghost" onclick="resetAll()">🧹 Reset Skor</button>
+      </div>
+    </div>
+  </main>
+
+  <div id="popup-overlay" onclick="closePopup()">
+    <div class="popup-card glass-card animate-pop" onclick="event.stopPropagation()">
+      <div class="popup-icon animate-float-y" id="popup-icon">🏆</div>
+      <h2 class="popup-title title-gradient" id="popup-title"></h2>
+      <div class="popup-actions">
+        <button class="btn-primary" onclick="resetBoard()">Main Lagi</button>
+        <button class="btn-ghost"   onclick="closePopup()">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
