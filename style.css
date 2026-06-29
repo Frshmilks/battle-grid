@@ -264,7 +264,25 @@ body::before {
    THEMES — fully retoken UI
 =========================== */
 
-/* Galaxy (default — purple/indigo cosmic) */
+/* Home — neutral slate palette for splash & theme picker */
+body.theme-home {
+  --player-x: oklch(0.80 0.12 200);
+  --player-o: oklch(0.78 0.14 170);
+  --primary: oklch(0.72 0.13 200);
+  --card: oklch(0.25 0.02 240 / 0.55);
+  --border: oklch(0.90 0.02 230 / 0.15);
+  --foreground: oklch(0.96 0.01 230);
+  --muted-foreground: oklch(0.75 0.02 230);
+  --gradient-bg:
+    radial-gradient(ellipse at 20% 15%, oklch(0.35 0.06 220 / 0.55), transparent 55%),
+    radial-gradient(ellipse at 80% 85%, oklch(0.32 0.05 200 / 0.55), transparent 55%),
+    linear-gradient(160deg, oklch(0.14 0.02 240), oklch(0.08 0.01 230));
+  --gradient-primary: linear-gradient(135deg, oklch(0.72 0.13 200), oklch(0.78 0.14 170));
+  --shadow-glow: 0 0 50px oklch(0.72 0.13 200 / 0.35);
+  --star-opacity: 0.25;
+}
+
+/* Galaxy (purple/indigo cosmic) */
 body.theme-galaxy {
   --player-x: oklch(0.82 0.16 60);
   --player-o: oklch(0.72 0.20 290);
