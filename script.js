@@ -23,6 +23,7 @@ let difficulty    = 'medium';
 let scores        = { x: 0, o: 0, draw: 0 };
 let gameActive    = false;
 let botTimer      = null;
+let lastMove      = -1;
 let themePickerFromGame = false;
 
 const getXIcon = () => themes[currentTheme].x;
@@ -126,7 +127,7 @@ function renderBoard() {
       cell.classList.add(val === 'X' ? 'cell-x' : 'cell-o');
       if (result?.line.includes(i)) cell.classList.add('animate-pulse-glow');
       const span = document.createElement('span');
-      span.className   = 'animate-pop';
+      span.className   = i === lastMove ? 'animate-pop' : '';
       span.textContent = val === 'X' ? getXIcon() : getOIcon();
       cell.appendChild(span);
     }
@@ -226,6 +227,7 @@ function handleClick(i) {
   if (!gameActive || board[i] !== '') return;
   if (mode === 'bot' && currentPlayer !== 'X') return;
   board[i]      = currentPlayer;
+  lastMove      = i;
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   renderBoard();
   checkGameEnd();
@@ -258,6 +260,7 @@ function scheduleBotMove() {
     const choice = pickBotMove(board, difficulty);
     if (choice < 0) return;
     board[choice] = 'O';
+    lastMove = choice;
     currentPlayer = 'X';
     renderBoard();
     checkGameEnd();
